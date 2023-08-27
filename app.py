@@ -11,6 +11,18 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 def serve_file():
     return send_from_directory(app.static_folder, 'index.html')
 
+@app.route('/css/index.css')
+def serve_file2():
+    return send_from_directory(app.static_folder, 'css/index.css')
+
+@app.route('/js/index.js')
+def serve_file3():
+    return send_from_directory(app.static_folder, 'js/index.js')
+
+@app.route('/js/socket.io.js')
+def serve_file4():
+    return send_from_directory(app.static_folder, 'js/socket.io.js')
+
 @socketio.on('message')
 def handle_message(data):
     content = data['content']

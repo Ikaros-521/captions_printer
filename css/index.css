@@ -1,0 +1,111 @@
+#subtitle {
+    font-size: 24px;
+    color: #000000;
+    font-family: '宋体';
+}
+
+#subtitle_bg {
+    background: green;
+    min-height: 200px;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+#colorPicker {
+    margin-top: 200px;
+}
+
+/* 隐藏默认的单选框 */
+input[type="radio"] {
+    display: none;
+}
+
+/* 自定义单选框样式 */
+.radio-container {
+    /* 使用 flex 布局使单选框在同一行 */
+    display: flex;
+    margin: 10px 0px;
+}
+
+.radio-item {
+    margin-right: 10px; /* 单选框之间的间距 */
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #333; /* 边框样式 */
+    border-radius: 50%; /* 圆形 */
+    margin-right: 5px;
+    display: inline-block;
+    position: relative;
+}
+
+/* 选中状态的样式 */
+input[type="radio"]:checked + .radio-custom::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: #333;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+}
+
+
+/* 美化输入框 */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  padding: 10px; /* 设置内边距 */
+  border: 1px solid #ccc; /* 设置边框样式 */
+  border-radius: 5px; /* 设置圆角 */
+  font-size: 16px; /* 设置字体大小 */
+}
+
+/* 悬停效果 */
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover {
+  border-color: #333; /* 悬停时的边框颜色 */
+}
+
+/* 聚焦效果 */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none; /* 移除默认的轮廓样式 */
+  border-color: #007bff; /* 聚焦时的边框颜色 */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 添加阴影效果 */
+}
+
+/* 美化按钮 */
+button {
+  padding: 10px 20px; /* 设置内边距 */
+  background-color: #007bff; /* 背景颜色 */
+  color: #fff; /* 文本颜色 */
+  border: none; /* 移除边框 */
+  border-radius: 5px; /* 设置圆角 */
+  font-size: 16px; /* 设置字体大小 */
+  cursor: pointer; /* 鼠标样式为手型 */
+}
+
+/* 悬停效果 */
+button:hover {
+  background-color: #0056b3; /* 悬停时的背景颜色 */
+}
+
+/* 禁用状态 */
+button:disabled {
+  background-color: #ccc; /* 禁用状态的背景颜色 */
+  cursor: not-allowed; /* 禁用状态的鼠标样式 */
+}
