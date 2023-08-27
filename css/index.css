@@ -70,6 +70,7 @@ input[type="password"] {
   border: 1px solid #ccc; /* 设置边框样式 */
   border-radius: 5px; /* 设置圆角 */
   font-size: 16px; /* 设置字体大小 */
+  min-width: 500px;
 }
 
 /* 悬停效果 */
