@@ -10,7 +10,7 @@ python：3.10
 浏览器访问：`http://127.0.0.1:5500/index.html`  
 
 ## 整合包
-整合包下载：{https://github.com/Ikaros-521/captions_printer/releases](https://github.com/Ikaros-521/captions_printer/releases)  
+整合包下载：[https://github.com/Ikaros-521/captions_printer/releases](https://github.com/Ikaros-521/captions_printer/releases)  
 整合包直接解压，运行bat即可使用。  
 
 # FAQ
