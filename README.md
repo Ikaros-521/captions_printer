@@ -9,6 +9,10 @@ python：3.10
 运行：`python app.py`  
 浏览器访问：`http://127.0.0.1:5500/index.html`  
 
+## 整合包
+整合包下载：{https://github.com/Ikaros-521/captions_printer/releases](https://github.com/Ikaros-521/captions_printer/releases)  
+整合包直接解压，运行bat即可使用。  
+
 # FAQ
 1.5500端口冲突  
 可以修改`app.py`和`js/index.js`中，搜索`5500`，全部改成你的新端口即可。  
@@ -24,3 +28,5 @@ python：3.10
   - 优化接口返回内容
   - 优化文档
   - 加长文本输入框
+  - 新增忽略
+  - 新增整合包
