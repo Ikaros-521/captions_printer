@@ -30,12 +30,15 @@ def handle_message(data):
 
 @app.route('/send_message', methods=['GET'])
 def send_message():
-    content = request.args.get('content')
-    
-    # 将数据发送到 WebSocket
-    socketio.emit('message', {'content': content})
+    try:
+        content = request.args.get('content')
+        
+        # 将数据发送到 WebSocket
+        socketio.emit('message', {'content': content})
 
-    return jsonify({"message": "数据发送到WebSocket"})
+        return jsonify({"code": 200, "message": "数据发送到WebSocket成功"})
+    except Exception as e:
+        return jsonify({"code": -1, "message": f"数据发送到WebSocket失败\n{e}"})
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5500, debug=True)
