@@ -1,7 +1,17 @@
-import time
+import logging
+import webbrowser
 from flask import Flask, send_from_directory, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
+
+from utils.common import Common
+from utils.logger import Configure_logger
+
+common = Common()
+
+# 日志文件路径
+log_file = "./log/log-" + common.get_bj_time(1) + ".txt"
+Configure_logger(log_file)
 
 app = Flask(__name__, static_folder='./')
 CORS(app)  # 允许跨域请求
@@ -41,4 +51,8 @@ def send_message():
         return jsonify({"code": -1, "message": f"数据发送到WebSocket失败\n{e}"})
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5500, debug=True)
+    port = 5500
+    url = f'http://localhost:{port}/index.html'
+    webbrowser.open(url)
+    logging.info(f"浏览器访问地址：{url}")
+    socketio.run(app, host='0.0.0.0', port=port, debug=True)
