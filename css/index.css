@@ -89,6 +89,12 @@ input[type="password"]:focus {
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 添加阴影效果 */
 }
 
+.input_config_common {
+  min-width: 50px !important;
+  width: 80px !important;
+  margin: 5px 5px 5px 1px !important;
+}
+
 /* 美化按钮 */
 button {
   padding: 10px 20px; /* 设置内边距 */

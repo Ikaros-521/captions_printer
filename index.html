@@ -11,6 +11,24 @@
     <button id="messageSendButton" onclick="sendMessage()">发送</button>
     <button id="openColorPicker">背景色盘</button>
     <button id="openColorPicker2">文字色盘</button>
+    <div>
+        <label for="input_fontFamily">文字字体（css中支持的字体，不支持乱输）:</label> 
+        <input class="input_config_common" type="text" id="input_fontFamily" placeholder="请输入字体">
+    </div>
+    <div>
+        <label for="input_single_char_show_time">单个字符显示耗时(ms):</label> 
+        <input class="input_config_common" type="text" id="input_single_char_show_time" >
+
+        <label for="input_gradient_show_time">渐变显示耗时(ms):</label> 
+        <input class="input_config_common" type="text" id="input_gradient_show_time" >
+    </div>
+    <div>
+        <label for="input_hide_time">隐藏字幕的动画时间(ms):</label>
+        <input class="input_config_common" type="text" id="input_hide_time" >
+        
+        <label for="input_show_over_hide_time">显示完毕多久后隐藏字幕(ms):</label> 
+        <input class="input_config_common" type="text" id="input_show_over_hide_time" >
+    </div>
     <div class="radio-container">
         <div class="radio-item">
             <label class="radio-label">

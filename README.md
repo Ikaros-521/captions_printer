@@ -21,8 +21,11 @@ github：[https://github.com/Ikaros-521/captions_printer/releases](https://githu
 可以修改`app.py`和`js/index.js`中，搜索`5500`，全部改成你的新端口即可。  
 
 # 更新日志
-- v0.1.0
-  - 初始功能实现，发布demo
+- v0.2.0
+  - 支持字体设置，支持显示隐藏参数自定义
+- v0.1.2
+  - 新增日志记录
+  - 新增自动打开浏览器访问功能
 - v0.1.1
   - 新增依赖txt
   - 美化UI
@@ -33,6 +36,5 @@ github：[https://github.com/Ikaros-521/captions_printer/releases](https://githu
   - 加长文本输入框
   - 新增忽略
   - 新增整合包
-- v0.1.2
-  - 新增日志记录
-  - 新增自动打开浏览器访问功能
+- v0.1.0
+  - 初始功能实现，发布demo

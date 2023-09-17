@@ -2,8 +2,17 @@
 let currentAnimation;
 let isHiding = false;
 let hideSubtitle_Timeout;
+// 隐藏字幕的动画时间
 let hide_time = 1000;
-let auto_hide_time = 2000;
+// 显示完毕多久后隐藏字幕
+let show_over_hide_time = 2000;
+// 单个字符显示耗时
+let single_char_show_time = 200;
+// 渐变显示耗时
+let gradient_show_time = 500;
+// 显示框字体
+let subtitle_font_family = '宋体';
+
 
 const socket = io.connect('http://localhost:5500');
 
@@ -11,11 +20,23 @@ socket.on('message', function(data) {
     showMessage(data.content);
 });
 
+// 获取输入框中的值并转为整数
+function getNumber(input, defaultValue = 0) {
+    let value = input.value;
+    let number = parseInt(value);
+
+    if (isNaN(number) || value === '') {
+        number = defaultValue; 
+    }
+
+    return number;
+}
+
 // 获取所有具有相同 name 属性的单选按钮
 const radioButtons = document.querySelectorAll('input[name="show_mode"]');
 
-// 显示文本内容的函数
-function showSubtitle(text, duration, auto_hide_time) {
+// 显示文本内容的函数 
+function showSubtitle(text) {
     // 清空之前的文本内容
     clearSubtitle();
 
@@ -31,7 +52,7 @@ function showSubtitle(text, duration, auto_hide_time) {
         const subtitleDiv = document.getElementById("subtitle");
         subtitleDiv.innerText = text;
         subtitleDiv.style.opacity = 0;
-        subtitleDiv.style.transition = `opacity ${duration / 1000}s ease-in`;
+        subtitleDiv.style.transition = `opacity ${gradient_show_time / 1000}s ease-in`;
 
         setTimeout(() => {
             subtitleDiv.style.opacity = 1;
@@ -39,7 +60,7 @@ function showSubtitle(text, duration, auto_hide_time) {
 
         hideSubtitle_Timeout = setTimeout(() => {
             hideSubtitle(hide_time);
-        }, auto_hide_time);
+        }, show_over_hide_time + gradient_show_time);
     }
 
     // 逐字显示文本
@@ -55,11 +76,11 @@ function showSubtitle(text, duration, auto_hide_time) {
             if (currentIndex < textArray.length) {
                 subtitleDiv.innerText += textArray[currentIndex];
                 currentIndex++;
-                setTimeout(showNextCharacter, duration);
-            } else if (auto_hide_time) {
+                setTimeout(showNextCharacter, single_char_show_time);
+            } else if (show_over_hide_time + single_char_show_time * text.length) {
                 hideSubtitle_Timeout = setTimeout(() => {
                     hideSubtitle(hide_time);
-                }, auto_hide_time);
+                }, show_over_hide_time + single_char_show_time * text.length);
             }
         }
 
@@ -102,8 +123,33 @@ function hideSubtitle(fadeOutDuration) {
     }, fadeOutDuration);
 }
 
+// 设置配置到全局变量中
+function set_config() {
+    const input_hide_time = document.getElementById('input_hide_time');
+    const input_show_over_hide_time = document.getElementById('input_show_over_hide_time');
+    const input_single_char_show_time = document.getElementById('input_single_char_show_time');
+    const input_gradient_show_time = document.getElementById('input_gradient_show_time');
+
+    hide_time = getNumber(input_hide_time, 1000);
+    show_over_hide_time = getNumber(input_show_over_hide_time, 2000);
+    single_char_show_time = getNumber(input_single_char_show_time, 200);
+    gradient_show_time = getNumber(input_gradient_show_time, 500);
+}
+
+// 获取配置到输入框
+function get_config() {
+    document.getElementById('input_hide_time').value = hide_time;
+    document.getElementById('input_show_over_hide_time').value = show_over_hide_time;
+    document.getElementById('input_single_char_show_time').value = single_char_show_time;
+    document.getElementById('input_gradient_show_time').value = gradient_show_time;
+    document.getElementById('input_fontFamily').value = subtitle_font_family;
+}
+
 function showMessage(message) {
-    showSubtitle(message, 200, auto_hide_time);
+    // 获取下当前的配置信息
+    set_config();
+
+    showSubtitle(message);
 }
 
 function sendMessage() {
@@ -152,3 +198,13 @@ colorPicker2.addEventListener("input", () => {
     const selectedColor = colorPicker2.value;
     customDiv2.style.color = selectedColor; // 设置背景颜色
 });
+
+get_config();
+
+// 显示框字体动态调节
+const subtitle = document.getElementById('subtitle');
+const fontFamily = document.getElementById('input_fontFamily');
+
+fontFamily.addEventListener('input', function(){
+    subtitle.style.fontFamily = this.value;
+})
