@@ -1,0 +1,10 @@
+{
+  "bg_color": "#008000",
+  "font_color": "#000000",
+  "gradient_show_time": 500,
+  "hide_time": 1000,
+  "show_mode": "1",
+  "show_over_hide_time": 2000,
+  "single_char_show_time": 200,
+  "subtitle_font_family": "宋体"
+}

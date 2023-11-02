@@ -12,9 +12,24 @@ let single_char_show_time = 200;
 let gradient_show_time = 500;
 // 显示框字体
 let subtitle_font_family = '宋体';
+// 服务端口
+const server_port = 5500
+// 配置
+let config = null;
 
+// 背景色盘
+// 获取元素
+const customDiv = document.getElementById("subtitle_bg");
+const openColorPickerBtn = document.getElementById("openColorPicker");
+const colorPicker = document.getElementById("colorPicker");
 
-const socket = io.connect('http://localhost:5500');
+// 文字色盘
+// 获取元素
+const customDiv2 = document.getElementById("subtitle");
+const openColorPickerBtn2 = document.getElementById("openColorPicker2");
+const colorPicker2 = document.getElementById("colorPicker2");
+
+const socket = io.connect(`http://localhost:${server_port}`);
 
 socket.on('message', function(data) {
     showMessage(data.content);
@@ -30,6 +45,102 @@ function getNumber(input, defaultValue = 0) {
     }
 
     return number;
+}
+
+// 获取当前配置
+function get_config() {
+    var url = `http://127.0.0.1:${server_port}/get_config`;
+
+    fetch(url)
+        .then(function (response) {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error("网络响应失败");
+        })
+        .then(function (data) {
+            // 处理响应数据
+            console.log(data);
+
+            var data_json = JSON.parse(data);
+
+            config = data_json;
+
+            try {
+                document.getElementById('input_fontFamily').value = config["subtitle_font_family"];
+                document.getElementById('input_single_char_show_time').value = config["single_char_show_time"];
+                document.getElementById('input_gradient_show_time').value = config["gradient_show_time"];
+                document.getElementById('input_hide_time').value = config["hide_time"];
+                document.getElementById('input_show_over_hide_time').value = config["show_over_hide_time"];
+                document.querySelector('input[name="show_mode"][value="' + config["show_mode"]+ '"]').checked = true;
+                customDiv.style.backgroundColor = config["bg_color"];
+                customDiv2.style.color = config["font_color"];
+
+                // 隐藏字幕的动画时间
+                hide_time = parseInt(config["hide_time"]);
+                // 显示完毕多久后隐藏字幕
+                show_over_hide_time = parseInt(config["show_over_hide_time"]);
+                // 单个字符显示耗时
+                single_char_show_time = parseInt(config["single_char_show_time"]);
+                // 渐变显示耗时
+                gradient_show_time = parseInt(config["gradient_show_time"]);
+                // 显示框字体
+                subtitle_font_family = config["subtitle_font_family"];
+            } catch (error) {
+                // 处理错误
+                console.error(error);
+            }
+        })
+        .catch(function (error) {
+            // 处理错误
+            console.error(error);
+        });
+}
+
+// 保存配置
+function save_config() {
+    try {
+        config["subtitle_font_family"] = document.getElementById('input_fontFamily').value;
+        config["single_char_show_time"] = parseInt(document.getElementById('input_single_char_show_time').value);
+        config["gradient_show_time"] = parseInt(document.getElementById('input_gradient_show_time').value);
+        config["hide_time"] = parseInt(document.getElementById('input_hide_time').value);
+        config["show_over_hide_time"] = parseInt(document.getElementById('input_show_over_hide_time').value);
+        config["show_mode"] = document.querySelector('input[name="show_mode"]:checked').value;
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+
+    // 构建请求选项对象
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json", // 指定请求体为JSON格式
+        },
+        body: JSON.stringify(config), // 将JSON数据序列化为字符串并作为请求体
+    };
+
+    console.log(requestOptions);
+
+    // 构建完整的URL，包含查询参数
+    const url = `http://127.0.0.1:${server_port}/save_config`;
+
+    // 发送GET请求
+    fetch(url, requestOptions)
+        .then(function (response) {
+            if (response.ok) {
+                return response.json(); // 解析响应数据为JSON
+            }
+            throw new Error("网络响应失败");
+        })
+        .then(function (data) {
+            // 处理响应数据
+            console.log(data);
+        })
+        .catch(function (error) {
+            // 处理错误
+            console.error(error);
+        });
 }
 
 // 获取所有具有相同 name 属性的单选按钮
@@ -137,13 +248,13 @@ function set_config() {
 }
 
 // 获取配置到输入框
-function get_config() {
-    document.getElementById('input_hide_time').value = hide_time;
-    document.getElementById('input_show_over_hide_time').value = show_over_hide_time;
-    document.getElementById('input_single_char_show_time').value = single_char_show_time;
-    document.getElementById('input_gradient_show_time').value = gradient_show_time;
-    document.getElementById('input_fontFamily').value = subtitle_font_family;
-}
+// function get_config() {
+//     document.getElementById('input_hide_time').value = hide_time;
+//     document.getElementById('input_show_over_hide_time').value = show_over_hide_time;
+//     document.getElementById('input_single_char_show_time').value = single_char_show_time;
+//     document.getElementById('input_gradient_show_time').value = gradient_show_time;
+//     document.getElementById('input_fontFamily').value = subtitle_font_family;
+// }
 
 function showMessage(message) {
     // 获取下当前的配置信息
@@ -165,12 +276,6 @@ function handleKeyPress(event) {
     }
 }
 
-// 背景色盘
-// 获取元素
-const customDiv = document.getElementById("subtitle_bg");
-const openColorPickerBtn = document.getElementById("openColorPicker");
-const colorPicker = document.getElementById("colorPicker");
-
 // 打开色盘按钮点击事件
 openColorPickerBtn.addEventListener("click", () => {
     colorPicker.click(); // 触发颜色选择器的点击事件
@@ -180,13 +285,9 @@ openColorPickerBtn.addEventListener("click", () => {
 colorPicker.addEventListener("input", () => {
     const selectedColor = colorPicker.value;
     customDiv.style.backgroundColor = selectedColor; // 设置背景颜色
+    // console.log("customDiv.style.backgroundColor=" + selectedColor);
+    config["bg_color"] = selectedColor;
 });
-
-// 文字色盘
-// 获取元素
-const customDiv2 = document.getElementById("subtitle");
-const openColorPickerBtn2 = document.getElementById("openColorPicker2");
-const colorPicker2 = document.getElementById("colorPicker2");
 
 // 打开色盘按钮点击事件
 openColorPickerBtn2.addEventListener("click", () => {
@@ -197,6 +298,8 @@ openColorPickerBtn2.addEventListener("click", () => {
 colorPicker2.addEventListener("input", () => {
     const selectedColor = colorPicker2.value;
     customDiv2.style.color = selectedColor; // 设置背景颜色
+    // console.log("customDiv2.style.color=" + selectedColor);
+    config["font_color"] = selectedColor;
 });
 
 get_config();
