@@ -64,6 +64,9 @@ def send_to_web_captions_printer(self, api_ip_port, data):
 可以修改`app.py`和`js/index.js`中，搜索`5500`，全部改成你的新端口即可。  
 
 # 更新日志
+- v0.3.1
+  - 提高werkzeug日志等级，只打印输出内容，让日志更加清爽
+  - 对特殊符号解码，解决URL编码显示问题
 - v0.3.0
   - 支持配置本地化
 - v0.2.0

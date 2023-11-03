@@ -14,6 +14,11 @@ common = Common()
 log_file = "./log/log-" + common.get_bj_time(1) + ".txt"
 Configure_logger(log_file)
 
+# 获取 werkzeug 库的日志记录器
+werkzeug_logger = logging.getLogger("werkzeug")
+# 设置 httpx 日志记录器的级别为 WARNING
+werkzeug_logger.setLevel(logging.WARNING)
+
 config_file_path = "config.json"
 
 app = Flask(__name__, static_folder='./')
@@ -82,6 +87,8 @@ def send_message():
         # 将数据发送到 WebSocket
         socketio.emit('message', {'content': content})
 
+        logging.info(f"打印内容：{content}")
+
         return jsonify({"code": 200, "message": "数据发送到WebSocket成功"})
     except Exception as e:
         return jsonify({"code": -1, "message": f"数据发送到WebSocket失败\n{e}"})
@@ -91,4 +98,4 @@ if __name__ == '__main__':
     url = f'http://localhost:{port}/index.html'
     webbrowser.open(url)
     logging.info(f"浏览器访问地址：{url}")
-    socketio.run(app, host='0.0.0.0', port=port, debug=True)
+    socketio.run(app, host='0.0.0.0', port=port, debug=False)

@@ -32,7 +32,8 @@ const colorPicker2 = document.getElementById("colorPicker2");
 const socket = io.connect(`http://localhost:${server_port}`);
 
 socket.on('message', function(data) {
-    showMessage(data.content);
+    // 解码URL编码后显示
+    showMessage(decodeURIComponent(data.content));
 });
 
 // 获取输入框中的值并转为整数
