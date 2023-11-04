@@ -16,6 +16,8 @@ let subtitle_font_family = '宋体';
 const server_port = 5500
 // 配置
 let config = null;
+// tip弹窗数量
+let tipCounter = 0;
 
 // 背景色盘
 // 获取元素
@@ -48,6 +50,29 @@ function getNumber(input, defaultValue = 0) {
     return number;
 }
 
+// 显示提示框
+function showtip(type, text, timeout=3000) {
+    const tip = document.createElement("div");
+    tip.className = "tip";
+    tip.style.bottom = `${tipCounter * 40}px`; // 垂直定位
+    tip.innerText = text;
+    if (type == "error") {
+      tip.style.backgroundColor = "#ff0000";
+    }
+
+    document.body.appendChild(tip);
+
+    setTimeout(function () {
+      document.body.removeChild(tip);
+      tipCounter--;
+      if (tipCounter < 0) tipCounter = 0;
+    }, timeout);
+
+    // 是否实现多tip窗
+    tipCounter++;
+    if (tipCounter > 3) tipCounter = 0;
+}
+
 // 获取当前配置
 function get_config() {
     var url = `http://127.0.0.1:${server_port}/get_config`;
@@ -69,6 +94,7 @@ function get_config() {
 
             try {
                 document.getElementById('input_fontFamily').value = config["subtitle_font_family"];
+                document.getElementById('input_fontSize').value = config["subtitle_font_size"];
                 document.getElementById('input_single_char_show_time').value = config["single_char_show_time"];
                 document.getElementById('input_gradient_show_time').value = config["gradient_show_time"];
                 document.getElementById('input_hide_time').value = config["hide_time"];
@@ -87,6 +113,8 @@ function get_config() {
                 gradient_show_time = parseInt(config["gradient_show_time"]);
                 // 显示框字体
                 subtitle_font_family = config["subtitle_font_family"];
+
+                showtip("info", "本地配置加载完毕");
             } catch (error) {
                 // 处理错误
                 console.error(error);
@@ -102,6 +130,7 @@ function get_config() {
 function save_config() {
     try {
         config["subtitle_font_family"] = document.getElementById('input_fontFamily').value;
+        config["subtitle_font_size"] = document.getElementById('input_fontSize').value;
         config["single_char_show_time"] = parseInt(document.getElementById('input_single_char_show_time').value);
         config["gradient_show_time"] = parseInt(document.getElementById('input_gradient_show_time').value);
         config["hide_time"] = parseInt(document.getElementById('input_hide_time').value);
@@ -132,15 +161,18 @@ function save_config() {
             if (response.ok) {
                 return response.json(); // 解析响应数据为JSON
             }
+            showtip("error", "保存配置失败");
             throw new Error("网络响应失败");
         })
         .then(function (data) {
             // 处理响应数据
             console.log(data);
+            showtip("info", "保存配置成功");
         })
         .catch(function (error) {
             // 处理错误
             console.error(error);
+            showtip("error", "保存配置失败，" + error.toString());
         });
 }
 
@@ -308,7 +340,12 @@ get_config();
 // 显示框字体动态调节
 const subtitle = document.getElementById('subtitle');
 const fontFamily = document.getElementById('input_fontFamily');
+const fontSize = document.getElementById('input_fontSize');
 
 fontFamily.addEventListener('input', function(){
     subtitle.style.fontFamily = this.value;
+})
+
+fontSize.addEventListener('input', function(){
+    subtitle.style.fontSize = this.value;
 })

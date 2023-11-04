@@ -61,9 +61,12 @@ def send_to_web_captions_printer(self, api_ip_port, data):
 
 # FAQ
 1.5500端口冲突  
-可以修改`app.py`和`js/index.js`中，搜索`5500`，全部改成你的新端口即可。  
+可以修改`app.py`和`js/index.js`和`index.html`中，搜索`5500`，全部改成你的新端口即可。  
 
 # 更新日志
+- v0.3.2
+  - 增加文字字体大小设置
+  - 增加功能响应后的提示弹窗
 - v0.3.1
   - 提高werkzeug日志等级，只打印输出内容，让日志更加清爽
   - 对特殊符号解码，解决URL编码显示问题
