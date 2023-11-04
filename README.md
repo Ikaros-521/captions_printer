@@ -8,6 +8,7 @@ python：3.10
 安装依赖：`pip install -r requirements.txt`  
 运行：`python app.py`  
 浏览器访问：`http://127.0.0.1:5500/index.html`  
+视频教程：[https://www.bilibili.com/video/BV13h4y1e7z8/](https://www.bilibili.com/video/BV13h4y1e7z8/)  
 
 ## 整合包
 整合包下载：  
