@@ -114,6 +114,8 @@ function get_config() {
                 // 显示框字体
                 subtitle_font_family = config["subtitle_font_family"];
 
+                document.getElementById('subtitle').style.fontSize = config["subtitle_font_size"];
+
                 showtip("info", "本地配置加载完毕");
             } catch (error) {
                 // 处理错误
