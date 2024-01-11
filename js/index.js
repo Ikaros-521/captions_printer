@@ -1,6 +1,7 @@
 // 用于保存当前正在显示的动画的引用
 let currentAnimation;
 let isHiding = false;
+let currentTimeout = null;
 let hideSubtitle_Timeout;
 // 隐藏字幕的动画时间
 let hide_time = 1000;
@@ -186,6 +187,12 @@ function showSubtitle(text) {
     // 清空之前的文本内容
     clearSubtitle();
 
+    // 取消正在进行的显示
+    if (currentTimeout) {
+        clearTimeout(currentTimeout);
+        currentTimeout = null;
+    }
+
     // 停止当前的动画（如果有）
     if (currentAnimation) {
         cancelAnimationFrame(currentAnimation);
@@ -219,10 +226,11 @@ function showSubtitle(text) {
         let currentIndex = 0;
 
         function showNextCharacter() {
+            
             if (currentIndex < textArray.length) {
                 subtitleDiv.innerText += textArray[currentIndex];
                 currentIndex++;
-                setTimeout(showNextCharacter, single_char_show_time);
+                currentTimeout = setTimeout(showNextCharacter, single_char_show_time);
             } else if (show_over_hide_time + single_char_show_time * text.length) {
                 hideSubtitle_Timeout = setTimeout(() => {
                     hideSubtitle(hide_time);
