@@ -1,7 +1,14 @@
+:root {
+  --stroke-width: 1px; /* 默认描边厚度 */
+}
+
 #subtitle {
   font-size: 24px;
   color: #000000;
   font-family: '宋体';
+
+  -webkit-text-stroke: 0px black;
+  font-weight: 600;
 }
 
 #subtitle_bg {
@@ -113,7 +120,7 @@ input[type="password"]:focus {
 
 .input_config_common {
   min-width: 50px !important;
-  width: 80px !important;
+  width: 110px !important;
   margin: 5px 5px 5px 1px !important;
 }
 

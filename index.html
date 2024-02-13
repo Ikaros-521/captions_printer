@@ -9,14 +9,25 @@
 <body>
     <input type="text" id="messageInput" placeholder="输入要显示的文本内容" onkeydown="handleKeyPress(event)">
     <button id="messageSendButton" onclick="sendMessage()">发送</button>
-    <button id="openColorPicker">背景色盘</button>
+    <button id="openColorPicker">文字背景色盘</button>
     <button id="openColorPicker2">文字色盘</button>
+    <button id="openColorPicker3">页面背景色盘</button>
     <button id="saveButton" onclick="save_config()">保存配置</button>
     <div>
         <label for="input_fontFamily">文字字体（css中支持的字体，不支持乱输）:</label> 
         <input class="input_config_common" type="text" id="input_fontFamily" placeholder="请输入字体">
         <label for="input_fontSize">字体大小:</label> 
         <input class="input_config_common" type="text" id="input_fontSize" placeholder="请输入字体大小，单位px">
+        <label for="input_webkit_text_stroke">字体描边:</label> 
+        <input class="input_config_common" type="text" id="input_webkit_text_stroke" placeholder="请输入描边像素 描边颜色，如：1px #000000">
+        <label for="input_font_weight">字体粗细:</label> 
+        <input class="input_config_common" type="text" id="input_font_weight" placeholder="请输入100-900的以百进位的整数，如：600">
+    </div>
+    <div>
+        <label for="input_subtitle_bg_width">字幕背景宽度:</label> 
+        <input class="input_config_common" type="text" id="input_subtitle_bg_width" placeholder="请输入像素值，单位px，如：1600px">
+        <label for="input_subtitle_bg_height">字幕背景高度:</label> 
+        <input class="input_config_common" type="text" id="input_subtitle_bg_height" placeholder="请输入像素值，单位px，如：600px">
     </div>
     <div>
         <label for="input_single_char_show_time">单个字符显示耗时(ms):</label> 
@@ -56,6 +67,9 @@
     </div>
     <div id="colorPickerContainer2">
         <input type="color" id="colorPicker2" style="display: none;">
+    </div>
+    <div id="colorPickerContainer3">
+        <input type="color" id="colorPicker3" style="display: none;">
     </div>
     <script src="js/socket.io.js"></script>
     <script src="js/index.js"></script>

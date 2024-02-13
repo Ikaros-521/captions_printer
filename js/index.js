@@ -32,6 +32,12 @@ const customDiv2 = document.getElementById("subtitle");
 const openColorPickerBtn2 = document.getElementById("openColorPicker2");
 const colorPicker2 = document.getElementById("colorPicker2");
 
+// 页面背景色盘
+// 获取元素
+const customDiv3 = document.body;
+const openColorPickerBtn3 = document.getElementById("openColorPicker3");
+const colorPicker3 = document.getElementById("colorPicker3");
+
 const socket = io.connect(`http://localhost:${server_port}`);
 
 socket.on('message', function(data) {
@@ -96,6 +102,10 @@ function get_config() {
             try {
                 document.getElementById('input_fontFamily').value = config["subtitle_font_family"];
                 document.getElementById('input_fontSize').value = config["subtitle_font_size"];
+                document.getElementById('input_webkit_text_stroke').value = config["subtitle_webkit_text_stroke"];
+                document.getElementById('input_font_weight').value = config["subtitle_font_weight"];
+                document.getElementById('input_subtitle_bg_width').value = config["subtitle_bg_width"];
+                document.getElementById('input_subtitle_bg_height').value = config["subtitle_bg_height"];
                 document.getElementById('input_single_char_show_time').value = config["single_char_show_time"];
                 document.getElementById('input_gradient_show_time').value = config["gradient_show_time"];
                 document.getElementById('input_hide_time').value = config["hide_time"];
@@ -103,6 +113,7 @@ function get_config() {
                 document.querySelector('input[name="show_mode"][value="' + config["show_mode"]+ '"]').checked = true;
                 customDiv.style.backgroundColor = config["bg_color"];
                 customDiv2.style.color = config["font_color"];
+                customDiv3.style.backgroundColor = config["body_bg_color"];
 
                 // 隐藏字幕的动画时间
                 hide_time = parseInt(config["hide_time"]);
@@ -114,8 +125,15 @@ function get_config() {
                 gradient_show_time = parseInt(config["gradient_show_time"]);
                 // 显示框字体
                 subtitle_font_family = config["subtitle_font_family"];
+                strokeWidth = 10;
 
+                document.getElementById('subtitle_bg').style.width = config["subtitle_bg_width"];
+                document.getElementById('subtitle_bg').style.height = config["subtitle_bg_height"];
+
+                document.getElementById('subtitle').style.fontFamily = config["subtitle_font_family"];
                 document.getElementById('subtitle').style.fontSize = config["subtitle_font_size"];
+                document.getElementById('subtitle').style.webkitTextStroke = config["subtitle_webkit_text_stroke"];
+                document.getElementById('subtitle').style.fontWeight = config["subtitle_font_weight"];
 
                 showtip("info", "本地配置加载完毕");
             } catch (error) {
@@ -134,11 +152,20 @@ function save_config() {
     try {
         config["subtitle_font_family"] = document.getElementById('input_fontFamily').value;
         config["subtitle_font_size"] = document.getElementById('input_fontSize').value;
+        config["subtitle_webkit_text_stroke"] = document.getElementById('input_webkit_text_stroke').value;
+        config["subtitle_font_weight"] = document.getElementById('input_font_weight').value;
         config["single_char_show_time"] = parseInt(document.getElementById('input_single_char_show_time').value);
         config["gradient_show_time"] = parseInt(document.getElementById('input_gradient_show_time').value);
         config["hide_time"] = parseInt(document.getElementById('input_hide_time').value);
         config["show_over_hide_time"] = parseInt(document.getElementById('input_show_over_hide_time').value);
         config["show_mode"] = document.querySelector('input[name="show_mode"]:checked').value;
+        config["subtitle_bg_width"] = document.getElementById('subtitle_bg').style.width;
+        config["subtitle_bg_height"] = document.getElementById('subtitle_bg').style.height;
+
+        config["bg_color"] = colorPicker.value;
+        config["font_color"] = colorPicker2.value;
+        config["body_bg_color"] = colorPicker3.value;
+
     } catch (error) {
         console.error(error);
         return;
@@ -345,12 +372,27 @@ colorPicker2.addEventListener("input", () => {
     config["font_color"] = selectedColor;
 });
 
+// 打开色盘按钮点击事件
+openColorPickerBtn3.addEventListener("click", () => {
+    colorPicker3.click(); // 触发颜色选择器的点击事件
+});
+
+// 颜色选择器变化事件
+colorPicker3.addEventListener("input", () => {
+    const selectedColor = colorPicker3.value;
+    customDiv3.style.backgroundColor = selectedColor; // 设置背景颜色
+    // console.log("customDiv3.style.color=" + selectedColor);
+    config["body_bg_color"] = selectedColor;
+});
+
 get_config();
 
-// 显示框字体动态调节
+// 显示框字体动态调节 添加事件监听
 const subtitle = document.getElementById('subtitle');
 const fontFamily = document.getElementById('input_fontFamily');
 const fontSize = document.getElementById('input_fontSize');
+const webkitTextStroke = document.getElementById('input_webkit_text_stroke');
+const fontWeight = document.getElementById('input_font_weight');
 
 fontFamily.addEventListener('input', function(){
     subtitle.style.fontFamily = this.value;
@@ -358,4 +400,25 @@ fontFamily.addEventListener('input', function(){
 
 fontSize.addEventListener('input', function(){
     subtitle.style.fontSize = this.value;
+})
+
+webkitTextStroke.addEventListener('input', function(){
+    subtitle.style.webkitTextStroke = this.value;
+})
+
+fontWeight.addEventListener('input', function(){
+    subtitle.style.fontWeight = this.value;
+})
+
+// 字体背景 事件监听
+const subtitle_bg = document.getElementById('subtitle_bg');
+const subtitle_bg_width = document.getElementById('input_subtitle_bg_width');
+const subtitle_bg_height = document.getElementById('input_subtitle_bg_height');
+
+subtitle_bg_width.addEventListener('input', function(){
+    subtitle_bg.style.width = this.value;
+})
+
+subtitle_bg_height.addEventListener('input', function(){
+    subtitle_bg.style.height = this.value;
 })
