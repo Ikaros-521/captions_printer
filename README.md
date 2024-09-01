@@ -66,7 +66,7 @@ def send_to_web_captions_printer(self, api_ip_port, data):
 
 # 更新日志
 - v0.5.0
-  - send_message接口新增参数 start_delay，用于控制字幕显示延时时间（毫秒）
+  - send_message接口新增参数 start_delay，用于控制字幕显示延时时间（毫秒）,可以不传，默认为0
 - v0.4.1
   - 修复字体配置无法保存的bug
   - 新增 页面背景色盘、字体描边、字体粗细、文字背景宽高控制，使用更加灵活

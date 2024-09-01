@@ -330,8 +330,12 @@ function showMessage(data) {
     // 获取下当前的配置信息
     set_config();
 
-    // 延时执行
-    setTimeout(function() {showSubtitle(decodeURIComponent(data.content))}, parseFloat(data.start_delay));
+    if ("start_delay" in data) {
+        // 延时执行
+        setTimeout(function() {showSubtitle(decodeURIComponent(data.content))}, parseFloat(data.start_delay));
+    } else {
+        showSubtitle(decodeURIComponent(data.content));
+    }
 }
 
 function sendMessage() {
