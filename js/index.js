@@ -42,7 +42,7 @@ const socket = io.connect(`http://localhost:${server_port}`);
 
 socket.on('message', function(data) {
     // 解码URL编码后显示
-    showMessage(decodeURIComponent(data.content));
+    showMessage(data);
 });
 
 // 获取输入框中的值并转为整数
@@ -326,11 +326,12 @@ function set_config() {
 //     document.getElementById('input_fontFamily').value = subtitle_font_family;
 // }
 
-function showMessage(message) {
+function showMessage(data) {
     // 获取下当前的配置信息
     set_config();
 
-    showSubtitle(message);
+    // 延时执行
+    setTimeout(function() {showSubtitle(decodeURIComponent(data.content))}, parseFloat(data.start_delay));
 }
 
 function sendMessage() {

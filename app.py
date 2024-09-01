@@ -83,11 +83,13 @@ def save_config():
 def send_message():
     try:
         content = request.args.get('content')
+        # 显示延迟 默认单位为 毫秒
+        start_delay = request.args.get('start_delay', default=0, type=int)
         
         # 将数据发送到 WebSocket
-        socketio.emit('message', {'content': content})
+        socketio.emit('message', {'content': content, 'start_delay': start_delay})
 
-        logging.info(f"打印内容：{content}")
+        logging.info(f"延时：{start_delay}毫秒, 打印内容：{content}")
 
         return jsonify({"code": 200, "message": "数据发送到WebSocket成功"})
     except Exception as e:
