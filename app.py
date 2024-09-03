@@ -79,21 +79,33 @@ def save_config():
     except Exception as e:
         return jsonify({"code": -1, "message": f"无法写入配置文件！{e}"})
     
-@app.route('/send_message', methods=['GET'])
+@app.route('/send_message', methods=['GET', 'POST'])
 def send_message():
     try:
-        content = request.args.get('content')
-        # 显示延迟 默认单位为 毫秒
-        start_delay = request.args.get('start_delay', default=0, type=int)
-        
-        # 将数据发送到 WebSocket
-        socketio.emit('message', {'content': content, 'start_delay': start_delay})
+        if request.method == 'POST':
+            data = request.get_json()  # 获取并解析 JSON 数据
+            content = data.get('content', "")
+            start_delay = data.get('start_delay', 0)
+            keep_time = data.get('keep_time', 0)
+        else:  # GET 请求
+            content = request.args.get('content', "")
+            start_delay = request.args.get('start_delay', default=0, type=int)
+            keep_time = request.args.get('keep_time', default=0, type=int)
 
-        logging.info(f"延时：{start_delay}毫秒, 打印内容：{content}")
+        # 将数据发送到 WebSocket
+        socketio.emit('message', {
+            'content': content,
+            'start_delay': start_delay,
+            'keep_time': keep_time
+        })
+
+        logging.info(f"延时：{start_delay}毫秒, 保持时长：{keep_time}，打印内容：{content}")
 
         return jsonify({"code": 200, "message": "数据发送到WebSocket成功"})
     except Exception as e:
         return jsonify({"code": -1, "message": f"数据发送到WebSocket失败\n{e}"})
+
+
 
 if __name__ == '__main__':
     port = 5500

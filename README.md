@@ -19,7 +19,8 @@ github：[https://github.com/Ikaros-521/captions_printer/releases](https://githu
 
 # API
 
-api（get请求）：`http://127.0.0.1:5500/send_message?content=这里就是传入的内容了，将会显示在显示框中`  
+api（get请求）：`http://127.0.0.1:5500/send_message?content=这里就是传入的内容了\n将会显示在显示框中&start_delay=1000&keep_time=5000`    
+也支持post请求
 
 ## 参考例程
 ```python
@@ -65,6 +66,10 @@ def send_to_web_captions_printer(self, api_ip_port, data):
 可以修改`app.py`和`js/index.js`和`index.html`中，搜索`5500`，全部改成你的新端口即可。  
 
 # 更新日志
+- v0.5.1
+  - send_message接口新增参数 keep_time，用于控制字幕显示时间（毫秒）,可以不传，默认为自动计算时长
+  - send_message接口支持get或post请求
+  - send_message接口 content参数 传入\n时，将被替换为换行符（将不支持直接的\n显示）
 - v0.5.0
   - send_message接口新增参数 start_delay，用于控制字幕显示延时时间（毫秒）,可以不传，默认为0
 - v0.4.1

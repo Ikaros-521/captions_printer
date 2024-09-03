@@ -209,8 +209,15 @@ function save_config() {
 // 获取所有具有相同 name 属性的单选按钮
 const radioButtons = document.querySelectorAll('input[name="show_mode"]');
 
-// 显示文本内容的函数 
-function showSubtitle(text) {
+// 显示文本内容的函数 data为json数据
+function showSubtitle(data) {
+    // console.log(data.content);
+    let lines = data.content.split('\\n');
+    let text = lines.map(line => {
+        let decodedLine = decodeURIComponent(line);
+        return decodedLine.replace(/\\n/g, '\\n');
+    }).join('<br>');
+
     // 清空之前的文本内容
     clearSubtitle();
 
@@ -228,9 +235,9 @@ function showSubtitle(text) {
     clearTimeout(hideSubtitle_Timeout);
 
     // 渐变显示
-    function show1() {
+    function show1(keep_time) {
         const subtitleDiv = document.getElementById("subtitle");
-        subtitleDiv.innerText = text;
+        subtitleDiv.innerHTML = text;
         subtitleDiv.style.opacity = 0;
         subtitleDiv.style.transition = `opacity ${gradient_show_time / 1000}s ease-in`;
 
@@ -238,34 +245,73 @@ function showSubtitle(text) {
             subtitleDiv.style.opacity = 1;
         }, 100); // 延迟 100 毫秒以确保渐变效果有效
 
-        hideSubtitle_Timeout = setTimeout(() => {
-            hideSubtitle(hide_time);
-        }, show_over_hide_time + gradient_show_time);
+        if (keep_time == 0) {
+            hideSubtitle_Timeout = setTimeout(() => {
+                hideSubtitle(hide_time);
+            }, show_over_hide_time + gradient_show_time);
+        } else {
+            hideSubtitle_Timeout = setTimeout(() => {
+                hideSubtitle(hide_time);
+            }, keep_time);
+        }
+        
     }
 
     // 逐字显示文本
-    function show2() {
+    function show2(keep_time) {
         const subtitleDiv = document.getElementById("subtitle");
-        subtitleDiv.innerText = "";
+        subtitleDiv.innerHTML = "";
         subtitleDiv.style.opacity = 1;
-
-        const textArray = text.split("");
+    
+        // 将文本拆分为HTML标签和文本内容
+        const textArray = text.split(/(<br>|<[^>]+>)/);
         let currentIndex = 0;
-
-        function showNextCharacter() {
-            
+    
+        function showNextPart() {
             if (currentIndex < textArray.length) {
-                subtitleDiv.innerText += textArray[currentIndex];
-                currentIndex++;
-                currentTimeout = setTimeout(showNextCharacter, single_char_show_time);
-            } else if (show_over_hide_time + single_char_show_time * text.length) {
+                const part = textArray[currentIndex];
+                if (part.startsWith('<')) {
+                    // 如果是HTML标签，直接添加
+                    subtitleDiv.innerHTML += part;
+                    currentIndex++;
+                    // 立即显示下一部分，不需要延迟
+                    showNextPart();
+                } else {
+                    // 如果是文本内容，逐字显示
+                    const chars = part.split('');
+                    let charIndex = 0;
+    
+                    function showNextChar() {
+                        if (charIndex < chars.length) {
+                            subtitleDiv.innerHTML += chars[charIndex];
+                            charIndex++;
+                            currentTimeout = setTimeout(showNextChar, single_char_show_time);
+                        } else {
+                            currentIndex++;
+                            showNextPart();
+                        }
+                    }
+    
+                    showNextChar();
+                }
+            } else {
+                const totalTime = keep_time === 0 ? 
+                    (show_over_hide_time + single_char_show_time * text.length) : 
+                    keep_time;
+    
                 hideSubtitle_Timeout = setTimeout(() => {
                     hideSubtitle(hide_time);
-                }, show_over_hide_time + single_char_show_time * text.length);
+                }, totalTime);
             }
         }
+    
+        showNextPart();
+    }
 
-        showNextCharacter();
+    var keep_time = 0;
+    // 判断是否有keep_time参数
+    if ("keep_time" in data) {
+        keep_time = parseInt(data.keep_time);
     }
 
     // 遍历单选按钮并检查哪一个被选中
@@ -274,8 +320,8 @@ function showSubtitle(text) {
             // 此单选按钮被选中
             const selectedValue = radio.value;
             console.log(`选中的值是：${selectedValue}`);
-            if(selectedValue == "1") show1();
-            else show2();
+            if(selectedValue == "1") show1(keep_time);
+            else show2(keep_time);
         }
     });
     
@@ -332,9 +378,9 @@ function showMessage(data) {
 
     if ("start_delay" in data) {
         // 延时执行
-        setTimeout(function() {showSubtitle(decodeURIComponent(data.content))}, parseFloat(data.start_delay));
+        setTimeout(function() {showSubtitle(data)}, parseFloat(data.start_delay));
     } else {
-        showSubtitle(decodeURIComponent(data.content));
+        showSubtitle(data);
     }
 }
 
