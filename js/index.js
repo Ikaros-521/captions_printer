@@ -13,12 +13,30 @@ let single_char_show_time = 200;
 let gradient_show_time = 500;
 // 显示框字体
 let subtitle_font_family = '宋体';
+const currentUrl = window.location.href;
 // 服务端口
 const server_port = 5500
 // 配置
 let config = null;
 // tip弹窗数量
 let tipCounter = 0;
+
+// 获取URL的IP和端口
+function getHostWithPortFromUrl(urlString) {
+    const url = new URL(urlString);
+    const { hostname, port, protocol } = url;
+    const defaultPorts = {
+        'http:': '80',
+        'https:': '443'
+    };
+
+    const hostWithPort = port ? `${hostname}:${port}` : `${hostname}:${defaultPorts[protocol] || ''}`;
+    return {
+        "host": hostname,
+        "port": port || defaultPorts[protocol] || '',
+        "ip_port": hostWithPort
+    };
+}
 
 // 背景色盘
 // 获取元素
@@ -38,7 +56,7 @@ const customDiv3 = document.body;
 const openColorPickerBtn3 = document.getElementById("openColorPicker3");
 const colorPicker3 = document.getElementById("colorPicker3");
 
-const socket = io.connect(`http://localhost:${server_port}`);
+const socket = io.connect(`http://${getHostWithPortFromUrl(currentUrl).host}:${server_port}`);
 
 socket.on('message', function(data) {
     // 解码URL编码后显示
@@ -82,7 +100,7 @@ function showtip(type, text, timeout=3000) {
 
 // 获取当前配置
 function get_config() {
-    var url = `http://127.0.0.1:${server_port}/get_config`;
+    var url = `http://${getHostWithPortFromUrl(currentUrl).host}:${server_port}/get_config`;
 
     fetch(url)
         .then(function (response) {
@@ -183,7 +201,7 @@ function save_config() {
     console.log(requestOptions);
 
     // 构建完整的URL，包含查询参数
-    const url = `http://127.0.0.1:${server_port}/save_config`;
+    const url = `http://${getHostWithPortFromUrl(currentUrl).host}:${server_port}/save_config`;
 
     // 发送GET请求
     fetch(url, requestOptions)
