@@ -66,6 +66,8 @@ def send_to_web_captions_printer(self, api_ip_port, data):
 可以修改`app.py`和`js/index.js`和`index.html`中，搜索`5500`，全部改成你的新端口即可。  
 
 # 更新日志
+- v0.5.2
+  - 优化：后端ws自动根据url获取IP地址
 - v0.5.1
   - send_message接口新增参数 keep_time，用于控制字幕显示时间（毫秒）,可以不传，默认为自动计算时长
   - send_message接口支持get或post请求
