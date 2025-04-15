@@ -9,6 +9,17 @@
 
   -webkit-text-stroke: 0px black;
   font-weight: 600;
+
+  /* 按单词换行的代码 */
+  word-wrap: break-word;       /* 兼容性更好的旧属性 */
+  overflow-wrap: break-word;   /* 推荐使用的新标准属性 */
+  white-space: normal;         /* 默认换行行为 */
+  word-break: normal;          /* 按单词而不是字符换行 */
+  
+  /* 可选：确保宽度填充容器 */
+  width: 100%;
+  /* 可选：防止内容溢出 */
+  overflow: hidden;
 }
 
 #subtitle_bg {
