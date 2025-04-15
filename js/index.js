@@ -153,6 +153,11 @@ function get_config() {
                 document.getElementById('subtitle').style.webkitTextStroke = config["subtitle_webkit_text_stroke"];
                 document.getElementById('subtitle').style.fontWeight = config["subtitle_font_weight"];
 
+                // 加载色盘初始值
+                document.getElementById("colorPicker").value = config["bg_color"];
+                document.getElementById("colorPicker2").value = config["font_color"];
+                document.getElementById("colorPicker3").value = config["body_bg_color"];
+
                 showtip("info", "本地配置加载完毕");
             } catch (error) {
                 // 处理错误
